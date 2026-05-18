@@ -1,8 +1,9 @@
-
 SOURCE = 	philo.c \
 			ft_atoi.c \
-			threading.c \
-			initializing.c
+			routine.c \
+			initializing.c \
+			threads_and_monitoring.c \
+			better_sleep.c
 
 NAME = philo
 
@@ -10,15 +11,13 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -g
 
-HEADER = philo.h
-
 OBJ = $(SOURCE:.c=.o)
 
 all : $(NAME)
 	@echo "Ready"
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(HEADER) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 clean: 
 	rm -f $(OBJ)
