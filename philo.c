@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 16:08:18 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/05/18 20:12:09 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/19 12:36:19 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ void	safe_printf(t_philo *philo, char *message)
 {
 	long long int	current_time;
 
+	pthread_mutex_lock(&philo->shared_values->start_lock);
 	current_time = get_time() - philo->shared_values->start_time;
+	pthread_mutex_unlock(&philo->shared_values->start_lock);
 	pthread_mutex_lock(&philo->shared_values->death_check);
 	pthread_mutex_lock(&philo->shared_values->write_lock);
 	if (!philo->shared_values->dead)
@@ -45,6 +47,7 @@ void	destroy_every_mutex(t_philo *philos, t_shared *shared)
 		i++;
 	}
 	free(shared->forks);
+	pthread_mutex_destroy(&shared->start_lock);
 	pthread_mutex_destroy(&shared->write_lock);
 	pthread_mutex_destroy(&shared->max_meals_lock);
 	pthread_mutex_destroy(&shared->death_check);
@@ -73,6 +76,8 @@ int	philos(int args, char **argv)
 
 int	main(int args, char **argv)
 {
+	if (!(args == 5 || args == 6))
+		return (1);
 	if (philos(args, argv))
 		return (1);
 	return (0);

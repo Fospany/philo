@@ -3,7 +3,8 @@ SOURCE = 	philo.c \
 			routine.c \
 			initializing.c \
 			threads_and_monitoring.c \
-			better_sleep.c
+			monitoring_helpers.c \
+			routine_helpers.c \
 
 NAME = philo
 

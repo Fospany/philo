@@ -6,18 +6,18 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 17:12:46 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/05/18 13:35:13 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/19 13:42:49 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check(char *s, int i)
+int	is_not_digit(char *s, int i)
 {
 	while (s[i])
 	{
-		if (!(s[i] < '9' || s[i] > '0'))
-			return (-1);
+		if (!(s[i] <= '9' && s[i] >= '0'))
+			return (1);
 		i++;
 	}
 	return (0);
@@ -34,7 +34,7 @@ int	ft_atoi(char *s)
 		return (-1);
 	if (s[i] == '+')
 		i++;
-	if (check(s, i))
+	if (is_not_digit(s, i))
 		return (-1);
 	while (s[i])
 	{
@@ -43,6 +43,8 @@ int	ft_atoi(char *s)
 			return (-1);
 		i++;
 	}
+	if (res == 0)
+		return (-1);
 	return (res);
 }
 
@@ -54,7 +56,7 @@ int	neg_check(t_shared *shared)
 		return (1);
 	if (shared->time_to_eat == -1)
 		return (1);
-	if (shared->time_to_die == -1)
+	if (shared->time_to_sleep == -1)
 		return (1);
 	if (shared->number_of_meals == -1)
 		return (1);

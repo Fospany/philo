@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 14:00:59 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/05/18 14:17:47 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/19 13:43:01 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,27 @@ int	setting_philo_values(t_philo *philosophers, t_shared *shared)
 	return (0);
 }
 
-int	setting_args(int args, char **argv, t_shared *shared)
+int	init_mutexes(t_shared *shared)
 {
 	int	i;
 
+	i = 0;
+	shared->forks = malloc(sizeof(pthread_mutex_t)
+			* shared->number_of_philosophers);
+	if (!shared->forks)
+		return (1);
+	while (i < shared->number_of_philosophers)
+		pthread_mutex_init(&shared->forks[i++], NULL);
+	pthread_mutex_init(&shared->start_lock, NULL);
+	pthread_mutex_init(&shared->max_meals_lock, NULL);
+	pthread_mutex_init(&shared->write_lock, NULL);
+	pthread_mutex_init(&shared->death_check, NULL);
+	return (0);
+}
+
+int	setting_args(int args, char **argv, t_shared *shared)
+{
+	shared->dead = 0;
 	shared->finished_meals = 0;
 	shared->number_of_philosophers = ft_atoi(argv[1]);
 	shared->time_to_die = ft_atoi(argv[2]);
@@ -49,16 +66,7 @@ int	setting_args(int args, char **argv, t_shared *shared)
 		shared->number_of_meals = -2;
 	if (neg_check(shared))
 		return (1);
-	shared->forks = malloc(sizeof(pthread_mutex_t)
-			* shared->number_of_philosophers);
-	if (!shared->forks)
+	if (init_mutexes(shared))
 		return (1);
-	shared->dead = 0;
-	i = 0;
-	while (i < shared->number_of_philosophers)
-		pthread_mutex_init(&shared->forks[i++], NULL);
-	pthread_mutex_init(&shared->max_meals_lock, NULL);
-	pthread_mutex_init(&shared->write_lock, NULL);
-	pthread_mutex_init(&shared->death_check, NULL);
 	return (0);
 }
