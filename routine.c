@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 10:52:03 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/05/19 13:49:28 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/21 13:51:46 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ void	*dining(void *ptr)
 		continue ;
 	if (philo->shared_values->number_of_philosophers == 1)
 		return (only_one_philo(philo), NULL);
-	schedule_sleeps(philo);
 	if (philo->id % 2 == 1)
 		odd_philo(philo);
 	else
+	{
+		my_sleep(5);
 		even_philo(philo);
+	}
 	return (NULL);
 }
 

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 13:23:59 by bguthy            #+#    #+#             */
-/*   Updated: 2026/05/19 12:51:42 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/21 12:43:34 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,10 @@ void	thread_clean_up(pthread_t *threads, int i, t_shared *shared)
 	pthread_mutex_unlock(&shared->death_check);
 	while (j < i)
 	{
-		pthread_join(threads[i], NULL);
+		pthread_join(threads[j], NULL);
 		j++;
 	}
+	free(threads);
 }
 
 void	finishing_threads(pthread_t monitor, pthread_t *threads, int n)

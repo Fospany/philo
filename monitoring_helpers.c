@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 11:16:12 by bguthy            #+#    #+#             */
-/*   Updated: 2026/05/19 13:31:32 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/21 13:45:56 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ int	anyone_died_check(t_philo *philos, int i, long long current_meal)
 {
 	if (get_time() - current_meal >= philos[i].shared_values->time_to_die)
 	{
+		philos[i].shared_values->dead = 1;
 		pthread_mutex_lock(&philos[i].shared_values->write_lock);
 		pthread_mutex_lock(&philos[i].shared_values->start_lock);
 		printf("%lli %i died\n", get_time()
 			- philos[i].shared_values->start_time, philos[i].id);
 		pthread_mutex_unlock(&philos[i].shared_values->start_lock);
 		pthread_mutex_unlock(&philos[i].shared_values->write_lock);
-		philos[i].shared_values->dead = 1;
 		pthread_mutex_unlock(&philos[i].shared_values->death_check);
 		return (1);
 	}
@@ -66,14 +66,10 @@ int	end_check(t_philo *philos, int i)
 	j = 0;
 	if (reached_max_meals_check(philos, i))
 		return (1);
-	while (j < philos[i].shared_values->number_of_philosophers)
-	{
-		current_meal = last_meal_update(philos, i);
-		pthread_mutex_lock(&philos[i].shared_values->death_check);
-		if (anyone_died_check(philos, i, current_meal))
-			return (1);
-		j++;
-	}
+	current_meal = last_meal_update(philos, i);
+	pthread_mutex_lock(&philos[i].shared_values->death_check);
+	if (anyone_died_check(philos, i, current_meal))
+		return (1);
 	return (0);
 }
 
@@ -82,6 +78,6 @@ void	my_sleep(long long time_to_spend)
 	long long int	wake_up;
 
 	wake_up = get_time() + time_to_spend;
-	while (get_time() < wake_up)
+	while (get_time() <= wake_up)
 		usleep(200);
 }

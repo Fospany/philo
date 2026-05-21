@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 16:08:18 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/05/19 12:36:19 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/21 12:38:19 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@ void	safe_printf(t_philo *philo, char *message)
 	current_time = get_time() - philo->shared_values->start_time;
 	pthread_mutex_unlock(&philo->shared_values->start_lock);
 	pthread_mutex_lock(&philo->shared_values->death_check);
-	pthread_mutex_lock(&philo->shared_values->write_lock);
 	if (!philo->shared_values->dead)
+	{
+		pthread_mutex_lock(&philo->shared_values->write_lock);
 		printf("%lld %i %s", current_time, philo->id, message);
-	pthread_mutex_unlock(&philo->shared_values->write_lock);
+		pthread_mutex_unlock(&philo->shared_values->write_lock);
+	}
 	pthread_mutex_unlock(&philo->shared_values->death_check);
 }
 

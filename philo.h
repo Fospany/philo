@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 13:15:58 by bguthy            #+#    #+#             */
-/*   Updated: 2026/05/19 13:40:25 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/21 13:51:58 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void				my_sleep(long long time_to_spend);
 int					is_dead(t_shared *shared);
 int					wait_for_others(t_philo *philo);
 void				only_one_philo(t_philo *philo);
-void				schedule_sleeps(t_philo *philo);
 int					finished_eating_check(t_philo *philo);
 int					reached_max_meals_check(t_philo *philos, int i);
 long long int		last_meal_update(t_philo *philos, int i);

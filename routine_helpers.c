@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 11:05:34 by bguthy            #+#    #+#             */
-/*   Updated: 2026/05/19 13:45:51 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/05/21 13:52:03 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,6 @@ int	wait_for_others(t_philo *philo)
 	pthread_mutex_unlock(&philo->shared_values->start_lock);
 	usleep(50);
 	return (1);
-}
-
-void	schedule_sleeps(t_philo *philo)
-{
-	if (philo->shared_values->number_of_philosophers % 2 == 0)
-	{
-		if (philo->id % 2 == 0)
-			my_sleep(philo->shared_values->time_to_eat / 2);
-	}
-	else
-	{
-		if (philo->id % 2 == 0)
-			usleep(1000);
-	}
 }
 
 int	finished_eating_check(t_philo *philo)
