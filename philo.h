@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 13:15:58 by bguthy            #+#    #+#             */
-/*   Updated: 2026/05/21 13:51:58 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/19 13:27:03 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,14 @@ typedef struct s_shared
 	pthread_mutex_t	start_lock;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	death_check;
-	pthread_mutex_t	max_meals_lock;
+	//pthread_mutex_t	max_meals_lock;
 }					t_shared;
 
 typedef struct s_philo
 {
 	int				id;
 	long long int	last_meal;
+	long long int	start_time;
 	int				eaten_meals;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	*left_fork;
@@ -67,12 +68,15 @@ int					is_dead(t_shared *shared);
 int					wait_for_others(t_philo *philo);
 void				only_one_philo(t_philo *philo);
 int					finished_eating_check(t_philo *philo);
-int					reached_max_meals_check(t_philo *philos, int i);
+int					reached_max_meals_check(t_philo *philos);
 long long int		last_meal_update(t_philo *philos, int i);
 int					anyone_died_check(t_philo *philos, int i,
 						long long current_meal);
 void				finishing_threads(pthread_t monitor, pthread_t *threads,
 						int n);
 int					end_check(t_philo *philos, int i);
+void	let_go_of_left_fork(t_philo *philo);
+void	let_go_of_right_fork(t_philo *philo);
+void	let_go_of_forks(t_philo *philo);
 
 #endif

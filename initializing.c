@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 14:00:59 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/05/19 13:43:01 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/19 12:35:16 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	init_mutexes(t_shared *shared)
 	while (i < shared->number_of_philosophers)
 		pthread_mutex_init(&shared->forks[i++], NULL);
 	pthread_mutex_init(&shared->start_lock, NULL);
-	pthread_mutex_init(&shared->max_meals_lock, NULL);
+	//pthread_mutex_init(&shared->max_meals_lock, NULL);
 	pthread_mutex_init(&shared->write_lock, NULL);
 	pthread_mutex_init(&shared->death_check, NULL);
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine_helpers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 11:05:34 by bguthy            #+#    #+#             */
-/*   Updated: 2026/05/21 13:52:03 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/19 12:42:57 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,15 @@ int	wait_for_others(t_philo *philo)
 
 int	finished_eating_check(t_philo *philo)
 {
+	int done;
+	
+	done = 0;
+	pthread_mutex_lock(&philo->meal_lock);
 	if (philo->eaten_meals == philo->shared_values->number_of_meals)
-	{
-		pthread_mutex_lock(&philo->shared_values->max_meals_lock);
-		philo->shared_values->finished_meals++;
-		pthread_mutex_unlock(&philo->shared_values->max_meals_lock);
+		done =1;
+	pthread_mutex_unlock(&philo->meal_lock);
+	if (done)
 		return (1);
-	}
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 10:52:03 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/05/21 13:51:46 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/19 13:39:53 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,19 @@ void	*dining(void *ptr)
 	if (philo->id % 2 == 1)
 		odd_philo(philo);
 	else
-	{
-		my_sleep(5);
 		even_philo(philo);
-	}
 	return (NULL);
 }
 
 void	wanna_eat_odd(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left_fork);
-	safe_printf(philo, "has taken a fork\n");
 	if (is_dead(philo->shared_values))
-	{
-		pthread_mutex_unlock(philo->left_fork);
-		return ;
-	}
+		return (let_go_of_left_fork(philo));
+	safe_printf(philo, "has taken a fork\n");
 	pthread_mutex_lock(philo->right_fork);
+	if (is_dead(philo->shared_values))
+		return (let_go_of_forks(philo));
 	safe_printf(philo, "has taken a fork\n");
 	safe_printf(philo, "is eating\n");
 	pthread_mutex_lock(&philo->meal_lock);
@@ -49,14 +45,20 @@ void	wanna_eat_odd(t_philo *philo)
 		philo->eaten_meals++;
 	pthread_mutex_unlock(&philo->meal_lock);
 	my_sleep(philo->shared_values->time_to_eat);
-	pthread_mutex_unlock(philo->left_fork);
-	pthread_mutex_unlock(philo->right_fork);
+	let_go_of_forks(philo);
+}
+
+void	think_a_little(t_philo *philo)
+{
+	long long int think_time;
+
+	think_time = philo->shared_values->time_to_eat * 2 - philo->shared_values->time_to_sleep;
+	if (think_time > 0)
+		my_sleep(think_time);
 }
 
 void	odd_philo(t_philo *philo)
 {
-	long long	think_time;
-
 	while (1)
 	{
 		if (is_dead(philo->shared_values))
@@ -68,42 +70,48 @@ void	odd_philo(t_philo *philo)
 		my_sleep(philo->shared_values->time_to_sleep);
 		safe_printf(philo, "is thinking\n");
 		if (philo->shared_values->number_of_philosophers % 2 == 1)
-		{
-			think_time = (philo->shared_values->time_to_eat * 2)
-				- philo->shared_values->time_to_sleep;
-			if (think_time <= 0)
-				think_time = 1;
-			my_sleep(think_time);
-		}
+			think_a_little(philo);
 	}
+}
+
+void	let_go_of_right_fork(t_philo *philo)
+{
+	pthread_mutex_unlock(philo->right_fork);
+}
+
+void	let_go_of_left_fork(t_philo *philo)
+{
+	pthread_mutex_unlock(philo->left_fork);
+}
+
+void	let_go_of_forks(t_philo *philo)
+{
+	let_go_of_left_fork(philo);
+	let_go_of_right_fork(philo);
 }
 
 void	wanna_eat_even(t_philo *philo)
 {
 	pthread_mutex_lock(philo->right_fork);
-	safe_printf(philo, "has taken a fork\n");
 	if (is_dead(philo->shared_values))
-	{
-		pthread_mutex_unlock(philo->right_fork);
-		return ;
-	}
+		return (let_go_of_right_fork(philo));
+	safe_printf(philo, "has taken a fork\n");
 	pthread_mutex_lock(philo->left_fork);
+	if (is_dead(philo->shared_values))
+		return (let_go_of_forks(philo));
 	safe_printf(philo, "has taken a fork\n");
 	safe_printf(philo, "is eating\n");
 	pthread_mutex_lock(&philo->meal_lock);
 	philo->last_meal = get_time();
-	pthread_mutex_unlock(&philo->meal_lock);
 	if (philo->shared_values->number_of_meals != -2)
 		philo->eaten_meals++;
+	pthread_mutex_unlock(&philo->meal_lock);
 	my_sleep(philo->shared_values->time_to_eat);
-	pthread_mutex_unlock(philo->right_fork);
-	pthread_mutex_unlock(philo->left_fork);
+	let_go_of_forks(philo);
 }
 
 void	even_philo(t_philo *philo)
 {
-	long long	think_time;
-
 	while (1)
 	{
 		if (is_dead(philo->shared_values))
@@ -115,12 +123,6 @@ void	even_philo(t_philo *philo)
 		my_sleep(philo->shared_values->time_to_sleep);
 		safe_printf(philo, "is thinking\n");
 		if (philo->shared_values->number_of_philosophers % 2 == 1)
-		{
-			think_time = (philo->shared_values->time_to_eat * 2)
-				- philo->shared_values->time_to_sleep;
-			if (think_time <= 0)
-				think_time = 1;
-			my_sleep(think_time);
-		}
+			think_a_little(philo);
 	}
 }
